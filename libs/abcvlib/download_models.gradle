@@ -1,9 +1,18 @@
 project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'
 project.ext.MODEL_FILE_URL = 'https://github.com/oist/smartphone-robot-object-detection/releases/download/0.1.1/model.tflite'
+project.ext.MODEL_FILE_PATH = "${project.ext.ASSET_DIR}/model.tflite"
 
-
-task downloadModelFileRobot(type: Exec) {
-    commandLine 'wget', '-N', '-P', project.ext.ASSET_DIR, project.ext.MODEL_FILE_URL
+task downloadModelFileRobot {
+    // Only download if the file doesn't exist
+    doFirst {
+        def modelFile = file(project.ext.MODEL_FILE_PATH)
+        if (!modelFile.exists()) {
+            exec {
+                commandLine 'wget', '-N', '-P', project.ext.ASSET_DIR, project.ext.MODEL_FILE_URL
+            }
+        } else {
+            println "Model file already exists. Skipping download."
+        }
+    }
 }
-
 preBuild.dependsOn downloadModelFileRobot
