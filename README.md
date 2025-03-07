@@ -117,6 +117,9 @@ APK builds and abcvlib .aar files are stored in Github Releases.
     - -t: allow test packages
     - -d: allow version code downgrade (debuggable packages only)
     - -g: grant all runtime permissions
+
+   (Note if you see `adb: failed to install backAndForth-debug.apk: Failure [INSTALL_FAILED_UPDATE_INCOMPATIBLE: Package jp.oist.abcvlib.backandforth signatures do not match previously installed version; ignoring!]` you may need to uninstall the previous version of the APK manually from the phone)
+
 3. Run the APK on your device via `adb shell am start -n jp.oist.abcvlib.<AppName>/.MainActivity` where `<AppName>` is the name of the APK you just installed (e.g. `backandforth`)
 4. Alternatively to step 3, you can open the app from the app drawer on your device
 
