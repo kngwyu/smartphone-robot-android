@@ -6,7 +6,9 @@ task downloadModelFileRobot {
     doFirst {
         def modelFile = "${project.ext.ASSET_DIR}/model.tflite"
         if (!modelFile.exists()) {
-            commandLine 'wget', '-N', '-P', project.ext.ASSET_DIR, project.ext.MODEL_FILE_URL
+            exec {
+                commandLine 'wget', '-N', '-P', project.ext.ASSET_DIR, project.ext.MODEL_FILE_URL
+            }
         } else {
             println "Model file already exists. Skipping download."
         }
