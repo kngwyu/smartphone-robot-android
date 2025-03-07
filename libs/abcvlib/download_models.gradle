@@ -3,7 +3,7 @@ project.ext.MODEL_FILE_URL = 'https://github.com/oist/smartphone-robot-object-de
 
 task downloadModelFileRobot {
     // Only download if the file doesn't exist
-    def modelFile = "${project.ext.ASSET_DIR}/model.tflite"
+    def modelFile = file("${project.ext.ASSET_DIR}/model.tflite")
     if (!modelFile.exists()) {
         exec {
             commandLine 'wget', '-N', '-P', project.ext.ASSET_DIR, project.ext.MODEL_FILE_URL
