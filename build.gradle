@@ -111,8 +111,8 @@ subprojects {
         defaultConfig {
             compileSdkVersion = 33
             buildToolsVersion = '33.0.2'
-            minSdkVersion 33
-            targetSdkVersion 33
+            minSdkVersion 30
+            targetSdkVersion 30
 
             buildConfigField("String", "IP", "\"${ip.toString()}\"")
             buildConfigField("int", "PORT", "${port.toString()}")

@@ -10,7 +10,8 @@
 
 
     <application android:theme="@style/Theme.AppCompat">
-        <activity android:name="jp.oist.abcvlib.basiccharger.MainActivity">
+        <activity android:name="jp.oist.abcvlib.basiccharger.MainActivity"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
