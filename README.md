@@ -13,7 +13,7 @@ The following is a list of tools needed to build either abcvlib or any of the de
 
 1. Java opensdk v17 or higher, with environmental variable JAVA_HOME set to the root of this sdk e.g. `/usr/lib/jvm/java-1.17.0-openjdk-amd64` (a requirement by modern Android gradle plugin versions)
 2. BOTH git and GitHub command line interface (used to download packages and other larger assets from GitHub Packages)
-3. Local environment variables GITHUB_USER and GITHUB_TOKEN (see [Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) for more information on how to create a token. The token must have full "repo" permissions.
+3. Local environment variables GITHUB_USER and GITHUB_TOKEN (see [Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) for more information on how to create a token. The token must have full "repo" permissions and `read:packages` permission.
 ![permissions](./media/github_token_permissions.png)
 4. Android SDK Tools (If you prefer the command line, you can use the Android Command Line Tools and avoid using Android Studio)
 5. (Optional) Android Studio
