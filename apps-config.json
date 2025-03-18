@@ -6,6 +6,7 @@
       "basicServer",
       "basicCharger",
       "basicQRTransmitter",
-      "basicQRReceiver"
+      "basicQRReceiver",
+      "handsOnApp"
   ]
 }
