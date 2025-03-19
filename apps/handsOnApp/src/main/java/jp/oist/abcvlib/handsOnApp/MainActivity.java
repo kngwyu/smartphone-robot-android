@@ -37,26 +37,54 @@ public class MainActivity extends AbcvlibActivity implements BatteryDataSubscrib
     private PublisherManager publisherManager;
     private int countL = 0;
     private int countR = 0;
-    private int nLoopCalled = 0;
+    private int nLoopCalled1 = 0;
     private String imageLabel = "Nothing";
 
+    private int nLoopCalled2 = 0;
 
     @Override
     protected void abcvlibMainLoop() {
-        nLoopCalled += 1;
+
         // Example code for controlling robots
         // Set wheel output
         // Stop when detected something
-        if (!imageLabel.equals("Nothing")) {
-            outputs.setWheelOutput(0.0f, 0.0f, false, false);
-        } else if (100 < nLoopCalled && nLoopCalled < 120) {
-            outputs.setWheelOutput(0.0f, 1.0f, false, false);
-        } else if (120 < nLoopCalled && nLoopCalled < 140) {
-            outputs.setWheelOutput(-1.0f, -1.0f, false, false);
-        } else {
-            outputs.setWheelOutput(1.0f, 1.0f, false, false);
-        }
-        debugInfo.text1 = String.format("MainLoopCount: %d", nLoopCalled);
+      if (imageLabel.equals("keyboard")) {
+          nLoopCalled1 += 1;
+          if (0 < nLoopCalled1 && nLoopCalled1 < 500) {
+              outputs.setWheelOutput(1.0f, 1.0f, false, false);
+          }
+          else {
+              outputs.setWheelOutput(0.0f, 0.0f, false, false);
+          }
+       }else {
+          nLoopCalled2 += 1;
+          if (0 < nLoopCalled2 && nLoopCalled2 < 200) {
+              outputs.setWheelOutput(-0.5f, -0.5f, false, false);
+          }else if(200 < nLoopCalled2 && nLoopCalled2 < 250){
+
+              outputs.setWheelOutput(1.0f, 1.0f, false, false);
+          }else if(250 < nLoopCalled2 && nLoopCalled2 < 600){
+
+              outputs.setWheelOutput(-0.5f, 0.5f, false, false);
+       }
+          if(nLoopCalled2 == 600){
+              nLoopCalled2 = 0;
+          }
+
+      }
+//        else if (0 < nLoopCalled && nLoopCalled < 1) {
+
+//            outputs.setWheelOutput(-1.0f, -1.0f, false, false);
+//        } else if (300 < nLoopCalled && nLoopCalled < 400) {
+            //turn left
+//                outputs.setWheelOutput(0.0f, 0.3f, false, false);
+//        } else if (400 < nLoopCalled && nLoopCalled < 600) {
+            //turn left
+//            outputs.setWheelOutput(-1.0f, -1.0f, false, false);
+//        } else {
+//            outputs.setWheelOutput(0.0f, 0.0f, false, false);
+//        }
+        debugInfo.text1 = String.format("MainLoopCount: %d", nLoopCalled1);
     }
 
     @Override
