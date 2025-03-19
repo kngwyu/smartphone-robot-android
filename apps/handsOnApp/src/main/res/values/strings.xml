@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Hands on App</string>
+    <string name="description"> Text 1 </string>
+    <string name="description2"> Text 2 </string>
+    <string name="description3"> Text 3 </string>
+</resources>
