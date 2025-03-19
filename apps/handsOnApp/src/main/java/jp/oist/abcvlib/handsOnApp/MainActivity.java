@@ -38,24 +38,42 @@ public class MainActivity extends AbcvlibActivity implements BatteryDataSubscrib
     private int countL = 0;
     private int countR = 0;
     private int nLoopCalled = 0;
+    private int a = 0;
     private String imageLabel = "Nothing";
 
 
     @Override
     protected void abcvlibMainLoop() {
+        // int a = 0;
         nLoopCalled += 1;
         // Example code for controlling robots
         // Set wheel output
         // Stop when detected something
-        if (!imageLabel.equals("Nothing")) {
+        if (imageLabel.equals("keyboard")){
             outputs.setWheelOutput(0.0f, 0.0f, false, false);
-        } else if (100 < nLoopCalled && nLoopCalled < 120) {
+        } else if ((!imageLabel.equals("Nothing")) && (!imageLabel.equals("keyboard")))  {
+            if (countL== a) {
+                outputs.setWheelOutput(-1.0f, -1.0f, false, false);
+            } else if ((a < countL) && (countL< (a+10))) {
+                outputs.setWheelOutput(-1.0f, -1.0f, false, false);
+
+            } else{
             outputs.setWheelOutput(0.0f, 1.0f, false, false);
-        } else if (120 < nLoopCalled && nLoopCalled < 140) {
-            outputs.setWheelOutput(-1.0f, -1.0f, false, false);
-        } else {
-            outputs.setWheelOutput(1.0f, 1.0f, false, false);
+            }
+        }  else {
+                outputs.setWheelOutput(1.0f, 1.0f, false, false);
+  //      if (0 < nLoopCalled && nLoopCalled < 20) {
+//            outputs.setWheelOutput(0.0f, 0.0f, false, false);
+//        } else if (20 < nLoopCalled && nLoopCalled < 120) {
+//            outputs.setWheelOutput(1.0f, 1.0f, false, false);
+//        } else if (120 < nLoopCalled && nLoopCalled < 160) {
+//            outputs.setWheelOutput(0.0f, 1.0f, false, false);
+//        } else if (160 < nLoopCalled && nLoopCalled < 200) {
+//            outputs.setWheelOutput(-1.0f, -1.0f, false, false);
+//        } else {
+//            outputs.setWheelOutput(0.0f, 0.0f, false, false);
         }
+        a = countL;
         debugInfo.text1 = String.format("MainLoopCount: %d", nLoopCalled);
     }
 
