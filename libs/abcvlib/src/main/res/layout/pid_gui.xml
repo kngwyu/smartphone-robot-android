@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/textViewSetPoint"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:gravity="center"
         android:text="@string/set_point_deg"
         android:textAlignment="center" />
@@ -17,39 +17,39 @@
     <com.google.android.material.slider.Slider
         android:id="@+id/seekBarSetPoint"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:stepSize="0.1"
-        android:value="3.8"
+        android:value="1.4"
         android:valueFrom="-10.0"
         android:valueTo="10.0" />
 
     <TextView
         android:id="@+id/textViewTiltP"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:gravity="center"
         android:text="@string/tilt_p" />
 
     <com.google.android.material.slider.Slider
         android:id="@+id/seekBarTiltP"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:stepSize="0.001"
-        android:value="-0.475"
+        android:value="-0.175"
         android:valueFrom="-1.0"
         android:valueTo="0.0" />
 
     <TextView
         android:id="@+id/textViewTiltD"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:gravity="center"
         android:text="@string/tilt_d" />
 
     <com.google.android.material.slider.Slider
         android:id="@+id/seekBarTiltD"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:stepSize="0.0001"
         android:value="0.007"
         android:valueFrom="0.0"
@@ -58,49 +58,48 @@
     <TextView
         android:id="@+id/textViewWheelSpeedP"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:gravity="center"
         android:text="@string/speed_p" />
 
     <com.google.android.material.slider.Slider
         android:id="@+id/seekBarWheelSpeedP"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:stepSize="0.00001"
-        android:value="0.006"
+        android:value="0.002"
         android:valueFrom="0.0"
         android:valueTo="0.01" />
 
     <TextView
-        android:id="@+id/textViewExponentialWeight"
+        android:id="@+id/textViewMaxTiltFwd"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:gravity="center"
-        android:text="@string/expWeight" />
+        android:text="@string/maximum_tilt_angle_forward" />
 
     <com.google.android.material.slider.Slider
-        android:id="@+id/seekBarExponentialWeight"
+        android:id="@+id/seekBarMaxTiltFwd"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:stepSize="0.001"
-        android:value="0.25"
+        android:layout_height="40dp"
+        android:stepSize="0.1"
+        android:value="20.0"
         android:valueFrom="0.0"
-        android:valueTo="1.0" />
+        android:valueTo="30.0" />
 
     <TextView
-        android:id="@+id/textViewMaxAbsTilt"
+        android:id="@+id/textViewMaxTiltBwd"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:gravity="center"
-        android:text="@string/maximum_absolute_tilt_angle" />
+        android:text="@string/maximum_tilt_angle_backward" />
 
     <com.google.android.material.slider.Slider
-        android:id="@+id/seekBarMaxAbsTilt"
+        android:id="@+id/seekBarMaxTiltBwd"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:stepSize="0.1"
-        android:value="7.0"
-        android:valueFrom="-90.0"
-        android:valueTo="90.0" />
-
+        android:value="15.0"
+        android:valueFrom="0.0"
+        android:valueTo="20.0" />
 </LinearLayout>

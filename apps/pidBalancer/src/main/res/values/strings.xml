@@ -7,4 +7,6 @@
     <string name="expWeight">Exponential Weight</string>
     <string name="maximum_absolute_tilt_angle">Maximum Absolute Tilt Angle</string>
     <string name="start">Start</string>
+    <string name="deg">Deg: 0.00</string>
+    <string name="speed">Speed: 0.00</string>
 </resources>

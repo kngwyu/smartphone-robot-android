@@ -3,8 +3,8 @@
     <string name="tilt_p">Tilt P</string>
     <string name="tilt_d">Tilt D</string>
     <string name="speed_p">Wheel Speed P</string>
-    <string name="expWeight">Exponential Weight</string>
-    <string name="maximum_absolute_tilt_angle">Maximum Absolute Tilt Angle</string>
+    <string name="maximum_tilt_angle_forward">Maximum Forward Tilt Angle</string>
+    <string name="maximum_tilt_angle_backward">Maximum Backward Tilt Angle</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <!-- TODO: Remove or change this placeholder text -->

@@ -1,9 +1,12 @@
 package jp.oist.abcvlib.pidbalancer;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -28,11 +31,11 @@ import jp.oist.abcvlib.util.UsbSerial;
  * @author Yuji Kanagawa <a href="https://github.com/kngwyu">...</a>
  */
 public class MainActivity extends AbcvlibActivity implements BatteryDataSubscriber, SerialReadyListener {
-    float leftSpeed = 0.35f;
-    float rightSpeed = 0.35f;
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private BalancePIDController balancePIDController;
     private PublisherManager publisherManager;
     private PidGuiFragament pidGuiFragment;
+    private SpeedDegViewer sdViewer;
     private final String TAG = this.getClass().toString();
     protected void onCreate(Bundle savedInstanceState) {
         // Passes Android App information up to parent classes for various usages. Do not modify
@@ -48,6 +51,19 @@ public class MainActivity extends AbcvlibActivity implements BatteryDataSubscrib
                 .setThreadPriority(Thread.NORM_PRIORITY).setTimestep(5)
                 .setTimeUnit(TimeUnit.MILLISECONDS);
         this.runOnUiThread(this::createPIDFragment);
+
+        // UI update
+        final TextView speedView = (TextView) findViewById(R.id.speed_box);
+        final TextView degView = (TextView) findViewById(R.id.deg_box);
+        sdViewer = new SpeedDegViewer(this, speedView, degView, balancePIDController);
+        Runnable updateTask = new Runnable() {
+            @Override
+            public void run() {
+                handler.post(sdViewer);
+                handler.postDelayed(this, 100); // Schedule the next update
+            }
+        };
+        handler.post(updateTask);
     }
 
 

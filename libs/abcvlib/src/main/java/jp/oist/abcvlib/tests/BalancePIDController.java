@@ -14,15 +14,15 @@ public class BalancePIDController extends AbcvlibController implements WheelData
 
     // Initialize all sensor reading variables
     private double p_tilt = -10;
-    private double i_tilt = 0;
+    private double i_tilt = 0.0;
     private double d_tilt = 1.0;
-    private double setPoint = 2.8;
+    private double setPoint = 1.4;
     private double p_wheel = 0.0;
-    private double expWeight = 0.25;
     private double e_t = 0; // e(t) of wikipedia
     private double int_e_t; // integral of e(t) from wikipedia. Discrete, so just a sum here.
 
-    private double maxAbsTilt = 6.5; // in Degrees
+    private double maxTiltFwd = 20.0; // in Degrees
+    private double maxTiltBwd = 10.0; // in Degrees
 
     private double speedL;
     private double thetaDeg;
@@ -33,16 +33,33 @@ public class BalancePIDController extends AbcvlibController implements WheelData
     public BalancePIDController(){
     }
 
-    public void run(){
-        // If current tilt angle is over maxAbsTilt or under -maxAbsTilt --> Bounce Up
-        if ((setPoint - maxAbsTilt) > thetaDeg){
-            bounce(false); // Bounce backward first
-        }else if((setPoint + maxAbsTilt) < thetaDeg){
-            bounce(true); // Bounce forward first
+    public void run() {
+        int decision = 0;
+        // If current tilt angle is over maxTiltFwd or under -maxTiltFwd --> Bounce U
+        if (setPoint < thetaDeg - maxTiltFwd) {
+            // Example 0 < 20 - 15
+            // The robot is learning backward too much. Bounce forward first.
+            bounce(false);
+        } else if(setPoint > thetaDeg + maxTiltBwd) {
+            // Example 0 > -20 + 15
+            // The robot is learning backward too much. Bounce forward first.
+            bounce(true);
+            decision = 1;
         }else{
             bounceLoopCount = 0;
             linearController();
+            decision = 2;
         }
+
+        Log.v(TAG, "setPoint: " + setPoint + ", thetaDeg: " + thetaDeg + ", decision: " + decision);
+    }
+
+    public double getSpeedL() {
+        return speedL;
+    }
+
+    public double getThetaDeg() {
+        return thetaDeg;
     }
 
     /**
@@ -52,12 +69,12 @@ public class BalancePIDController extends AbcvlibController implements WheelData
      * @param d_tilt_ derivative controller relative to the tilt angle of the phone
      * @param setPoint_ the assumed angle where the robot would be balanced (ideally zero but realistically nearer to 3 or 4 deg)
      * @param p_wheel_ proportional controller relative to the wheel distance
-     * @param expWeight_ exponential filter coefficicent //todo implement this more clearly
-     * @param maxAbsTilt_ max tilt abgle (deg) at which the controller will switch between a linear and non-linear bounce controller.
+     * @param maxTiltFwd_ max forward tilt angle (deg) at which the controller will switch between a linear and non-linear bounce controller.
+     * @param maxTiltBwd_ max backward tilt angle (deg) at which the controller will switch between a linear and non-linear bounce controller.
      * @throws InterruptedException thrown if shutdown while trying to read/write to the IOIO board.
      */
     synchronized public void setPID(double p_tilt_, double i_tilt_, double d_tilt_, double setPoint_,
-                                    double p_wheel_, double expWeight_, double maxAbsTilt_)
+                                    double p_wheel_, double maxTiltFwd_, double maxTiltBwd_)
             throws InterruptedException {
 
         try {
@@ -66,8 +83,8 @@ public class BalancePIDController extends AbcvlibController implements WheelData
                 i_tilt = i_tilt_;
                 d_tilt = d_tilt_;
                 p_wheel = p_wheel_;
-                expWeight = expWeight_;
-                maxAbsTilt = maxAbsTilt_;
+                maxTiltFwd = maxTiltFwd_;
+                maxTiltBwd = maxTiltBwd_;
         } catch (NullPointerException e){
             Log.e(TAG,"Error", e);
             Thread.sleep(1000);
@@ -77,24 +94,24 @@ public class BalancePIDController extends AbcvlibController implements WheelData
     // -------------- Actual Controllers ----------------------------
 
     private void bounce(boolean forward) {
-        float speed = 0.5f;
         // loop steps between turning on and off wheels.
-        int bouncePulseWidth = 100;
+        final int bouncePulseWidth = 100;
+        final float bounceSpeed = 0.6f;
         if (bounceLoopCount < bouncePulseWidth * 0.1){
             setOutput(0,0);
         }else if (bounceLoopCount < bouncePulseWidth * 1.1){
             if (forward){
-                setOutput(speed,speed);
+                setOutput(bounceSpeed, bounceSpeed);
             }else{
-                setOutput(-speed,-speed);
+                setOutput(-bounceSpeed,-bounceSpeed);
             }
         }else if (bounceLoopCount < bouncePulseWidth * 1.2){
             setOutput(0,0);
         }else if (bounceLoopCount < bouncePulseWidth * 2.2) {
             if (forward){
-                setOutput(-speed,-speed);
+                setOutput(-bounceSpeed,-bounceSpeed);
             }else{
-                setOutput(speed,speed);
+                setOutput(bounceSpeed, bounceSpeed);
             }
         }else {
             bounceLoopCount = 0;
@@ -102,12 +119,11 @@ public class BalancePIDController extends AbcvlibController implements WheelData
         bounceLoopCount++;
     }
 
-    private void linearController(){
-
+    private void linearController() {
         // TODO this needs to account for length of time on each interval, or overall time length. Here this just assumes a width of 1 for all intervals.
         int_e_t = int_e_t + e_t;
         e_t = setPoint - thetaDeg;
-        // error betweeen actual and desired wheel speed (default 0)
+        // error between actual and desired wheel speed (default 0)
         double e_w = 0.0 - speedL;
         Log.v(TAG, "speedL: " + speedL + ", deg: " + thetaDeg);
 
@@ -116,6 +132,8 @@ public class BalancePIDController extends AbcvlibController implements WheelData
         double d_out = d_tilt * angularVelocityDeg;
 
         setOutput((float)(p_out + i_out + d_out), (float)(p_out + i_out + d_out));
+        Log.v(TAG, "P_tilt * e_t" + (p_tilt * e_t) + "p_wheel * e_w" +(p_wheel * e_w));
+        Log.v(TAG, "PID: " + p_out + "," + i_out + "," + d_out);
     }
 
     // -------------- Input Data Listeners ----------------------------
@@ -127,7 +145,6 @@ public class BalancePIDController extends AbcvlibController implements WheelData
                                   double wheelSpeedBufferedL, double wheelSpeedBufferedR,
                                   double wheelSpeedExpAvgL, double wheelSpeedExpAvgR) {
         speedL = wheelSpeedExpAvgL;
-        //        wheelData.setExpWeight(expWeight); // todo enable access to this in GUI somehow
     }
 
     @Override

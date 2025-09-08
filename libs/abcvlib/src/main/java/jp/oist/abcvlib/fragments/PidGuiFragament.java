@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import jp.oist.abcvlib.core.R;
@@ -32,8 +33,8 @@ public class PidGuiFragament extends Fragment{
     Slider p_tilt_;
     Slider d_tilt_;
     Slider p_wheel_;
-    Slider expWeight_;
-    Slider maxAbsTilt_;
+    Slider maxTiltFwd_;
+    Slider maxTiltBwd_;
 
     private final String TAG = this.getClass().toString();
     private BalancePIDController balancePIDController;
@@ -61,8 +62,8 @@ public class PidGuiFragament extends Fragment{
                     d_tilt_.getValue(),
                     setPoint_.getValue(),
                     p_wheel_.getValue(),
-                    expWeight_.getValue(),
-                    maxAbsTilt_.getValue());
+                    maxTiltFwd_.getValue(),
+                    maxTiltBwd_.getValue());
         } catch (InterruptedException e) {
             ErrorHandler.eLog(TAG, "Error when getting slider gui values", e, true);
         }
@@ -76,8 +77,13 @@ public class PidGuiFragament extends Fragment{
         controls.put("pt", p_tilt_ = rootView.findViewById(R.id.seekBarTiltP));
         controls.put("dt", d_tilt_ = rootView.findViewById(R.id.seekBarTiltD));
         controls.put("pw", p_wheel_ = rootView.findViewById(R.id.seekBarWheelSpeedP));
-        controls.put("ew", expWeight_ = rootView.findViewById(R.id.seekBarExponentialWeight));
-        controls.put("mt", maxAbsTilt_ = rootView.findViewById(R.id.seekBarMaxAbsTilt));
+        controls.put("mtf", maxTiltFwd_ = rootView.findViewById(R.id.seekBarMaxTiltFwd));
+        controls.put("mtb", maxTiltBwd_ = rootView.findViewById(R.id.seekBarMaxTiltBwd));
+
+        // Format the label for some small-valued sliders
+        p_wheel_.setLabelFormatter(value -> String.format(Locale.US, "%.5f", value));
+        p_tilt_.setLabelFormatter(value -> String.format(Locale.US, "%.3f", value));
+        d_tilt_.setLabelFormatter(value -> String.format(Locale.US, "%.4f", value));
 
         for (Map.Entry<String, Slider> entry : controls.entrySet()) {
             entry.getValue().addOnChangeListener(sliderChangeListener);
