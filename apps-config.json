@@ -9,6 +9,7 @@
       "basicQRReceiver",
       "handsOnApp",
       "pidBalancer",
+      "pidQRReceiver",
       "pidQRTransmitter"
   ]
 }
