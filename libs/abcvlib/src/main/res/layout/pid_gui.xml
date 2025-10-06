@@ -35,8 +35,8 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:stepSize="0.001"
-        android:value="-0.1"
-        android:valueFrom="-0.2"
+        android:value="-0.0"
+        android:valueFrom="-0.4"
         android:valueTo="0.0" />
 
     <TextView
@@ -67,7 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:stepSize="0.00001"
-        android:value="0.006"
+        android:value="0.0"
         android:valueFrom="0.0"
         android:valueTo="0.01" />
 

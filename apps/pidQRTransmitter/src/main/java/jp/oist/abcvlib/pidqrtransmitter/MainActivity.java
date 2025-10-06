@@ -42,7 +42,7 @@ public class MainActivity extends AbcvlibActivity implements SerialReadyListener
     private OrientationData orientationData;
     private WheelData wheelData;
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private Map<String, Double> pidData = new HashMap<>();
+    private final Map<String, Double> pidData = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +52,9 @@ public class MainActivity extends AbcvlibActivity implements SerialReadyListener
         // ID within the R class
         setContentView(R.layout.activity_main);
 
-        pidData.put("setPoint", 6.79);
-        pidData.put("p_tilt", -0.118);
-        pidData.put("d_tilt", 0.0058);
+        pidData.put("setPoint", 5.8);
+        pidData.put("p_tilt", -0.205);
+        pidData.put("d_tilt", 0.0115);
     }
 
     protected void onStart() {
