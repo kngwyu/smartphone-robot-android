@@ -45,8 +45,19 @@ public class MainActivity extends AbcvlibActivity implements SerialReadyListener
     PublisherManager publisherManager = new PublisherManager();
     private OrientationData orientationData;
     private WheelData wheelData;
-    private Map<String, Double> pidData = new HashMap<>();
+    private final Map<String, Double> pidData = new HashMap<>();
     private boolean pidvalueChanged = true;
+
+    private final int PID_BEFORE = 0;
+    private final int BOUNCE1 = 1;
+    private final int BOUNCE2 = 2;
+    private final int ROTATING = 3;
+    private final int PID_AFTER = 4;
+    private final int NOT_STARTED = 5;
+
+    private int state = NOT_STARTED;
+    private int stateCount = 0;
+
     private TextView statusTextView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +82,7 @@ public class MainActivity extends AbcvlibActivity implements SerialReadyListener
             if (balancePIDController != null) {
                 button.setText("Stop");
                 balancePIDController.startController();
+                state = PID_BEFORE;
             }
         } else {
             button.setText("Start");
@@ -106,6 +118,9 @@ public class MainActivity extends AbcvlibActivity implements SerialReadyListener
     // Main loop for any application extending AbcvlibActivity. This is where you will put your main code
     @Override
     protected void abcvlibMainLoop() {
+        if (state == NOT_STARTED) {
+            return;
+        }
         if (pidvalueChanged) {
             try {
                 balancePIDController.setPID(pidData.get("p_tilt"), 0.0, pidData.get("d_tilt"), pidData.get("setPoint"), 0.0, 0.0, 15.0);
@@ -114,7 +129,32 @@ public class MainActivity extends AbcvlibActivity implements SerialReadyListener
             }
             pidvalueChanged = false;
         }
-        balancePIDController.run();
+        if (state == ROTATING) {
+            outputs.setWheelOutput(0.6f, -0.6f, false, false);
+        } else if(state == BOUNCE1) {
+            outputs.setWheelOutput(0.6f, 0.6f, false, false);
+
+        }else if(state == BOUNCE2) {
+            outputs.setWheelOutput(-0.6f, -0.6f, false, false);
+
+        }else {
+            balancePIDController.run();
+        }
+        stateCount += 1;
+        if (state == PID_BEFORE && stateCount > 50) {
+            state = ROTATING;
+            stateCount = 0;
+        }else if (state == BOUNCE1 && stateCount > 20) {
+            state = BOUNCE2;
+            stateCount = 0;
+        } else if (state == BOUNCE2 && stateCount > 10) {
+            state = ROTATING;
+            stateCount = 0;
+        } else if (state == ROTATING && stateCount > 50) {
+            state = PID_BEFORE;
+            stateCount = 0;
+        }
+        Log.v(TAG, "State: " + state + "count: " + stateCount);
     }
 
     @Override
@@ -141,6 +181,7 @@ public class MainActivity extends AbcvlibActivity implements SerialReadyListener
                 }
             }
             pidvalueChanged = true; // Signal that PID values have changed and need to be applied
+            state = PID_AFTER;
             runOnUiThread(() -> {
                 if (statusTextView != null) {
                     statusTextView.setText("QR code found!");

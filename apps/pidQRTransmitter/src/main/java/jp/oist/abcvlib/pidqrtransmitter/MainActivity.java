@@ -52,7 +52,7 @@ public class MainActivity extends AbcvlibActivity implements SerialReadyListener
         // ID within the R class
         setContentView(R.layout.activity_main);
 
-        pidData.put("setPoint", 5.8);
+        pidData.put("setPoint", 5.9);
         pidData.put("p_tilt", -0.205);
         pidData.put("d_tilt", 0.0115);
     }
